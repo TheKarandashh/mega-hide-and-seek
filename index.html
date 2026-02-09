@@ -8,7 +8,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Яндекс Карты -->
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=46cb9e37-7338-4326-82f0-53bdb56de166&lang=ru_RU" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=9cab5077-58b7-4960-84f2-6756e3812f84&lang=ru_RU" type="text/javascript"></script>
     <style>
         * {
             margin: 0;
@@ -853,6 +853,44 @@
             background: rgba(244, 67, 54, 0.2);
         }
 
+        /* Кнопка "Показать игроков" */
+        .reveal-players-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            background: var(--danger-gradient);
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .reveal-players-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(244, 67, 54, 0.4);
+        }
+
+        .reveal-players-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .reveal-players-btn .timer {
+            font-family: monospace;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
         /* Модальное окно информации о зоне */
         .zone-modal-content {
             padding: 10px 0;
@@ -1600,7 +1638,7 @@
             background: rgba(255, 255, 255, 0.05);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 15px;
+            padding: 12px 20px; /* Увеличен padding */
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -1609,6 +1647,7 @@
             justify-content: center;
             gap: 8px;
             font-size: 14px;
+            width: 100%; /* Широкая кнопка */
         }
 
         .add-members-btn:hover {
@@ -1838,43 +1877,6 @@
             font-weight: 500;
         }
 
-        /* Эффект частиц */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(255, 217, 61, 0.6);
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) translateX(100px);
-                opacity: 0;
-            }
-        }
-
         /* Уведомление об успешном входе */
         .welcome-notice {
             position: fixed;
@@ -1905,26 +1907,23 @@
     </style>
 </head>
 <body>
-    <!-- Эффект частиц -->
-    <div class="particles" id="particles"></div>
-
     <!-- Маленькая иконка телеграм -->
     <div class="telegram-icon" id="telegram-icon">
         <i class="fab fa-telegram"></i>
     </div>
-
+    
     <!-- Уведомление о зоне -->
     <div id="zone-notification" class="zone-notification">
         <i class="fas fa-exclamation-triangle"></i>
         <span id="zone-notification-text"></span>
     </div>
-
+    
     <!-- Уведомление об успешном входе -->
     <div id="welcome-notice" class="welcome-notice" style="display: none;">
         <i class="fas fa-check-circle"></i>
         <span id="welcome-text">Успешный вход в игру!</span>
     </div>
-
+    
     <!-- Оповещение о геолокации -->
     <div id="geolocation-warning" class="geolocation-warning">
         <i class="fas fa-exclamation-triangle"></i>
@@ -1932,7 +1931,7 @@
             <strong>Внимание!</strong> С отключенной геолокацией вы не сможете играть.
         </div>
     </div>
-
+    
     <!-- Модальное окно выхода -->
     <div id="logout-modal" class="modal-overlay">
         <div class="modal">
@@ -1948,7 +1947,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Модальное окно удаления аккаунта -->
     <div id="delete-modal" class="modal-overlay">
         <div class="modal">
@@ -1967,7 +1966,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Модальное окно информации о команде -->
     <div id="team-modal" class="modal-overlay">
         <div class="modal">
@@ -2011,7 +2010,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Модальное окно редактора команд -->
     <div id="team-editor-modal" class="modal-overlay team-editor-modal">
         <div class="modal">
@@ -2024,7 +2023,7 @@
                     </label>
                     <input type="text" class="editor-input" id="team-editor-name" placeholder="Введите название">
                 </div>
-
+                
                 <div class="editor-section">
                     <label class="editor-label">
                         <i class="fas fa-align-left"></i>
@@ -2032,7 +2031,7 @@
                     </label>
                     <input type="text" class="editor-input" id="team-editor-description" placeholder="Введите описание (необязательно)">
                 </div>
-
+                
                 <div class="editor-section">
                     <label class="editor-label">
                         <i class="fas fa-palette"></i>
@@ -2043,7 +2042,7 @@
                         <input type="color" id="color-picker" value="#4CAF50">
                     </div>
                 </div>
-
+                
                 <div class="editor-section">
                     <label class="editor-label">
                         <i class="fas fa-users"></i>
@@ -2060,7 +2059,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="editor-section members-add-section">
                     <label class="editor-label">
                         <i class="fas fa-user-plus"></i>
@@ -2088,7 +2087,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Модальное окно добавления участников -->
     <div id="members-modal" class="modal-overlay">
         <div class="modal">
@@ -2114,7 +2113,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Модальное окно удаления -->
     <div id="delete-confirm-modal" class="modal-overlay">
         <div class="modal">
@@ -2132,7 +2131,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Модальное окно информации о зоне -->
     <div id="zone-info-modal" class="modal-overlay">
         <div class="modal">
@@ -2149,7 +2148,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Модальное окно редактирования зон -->
     <div id="zone-edit-modal" class="modal-overlay zone-edit-modal">
         <div class="modal">
@@ -2184,7 +2183,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Модальное окно админ панели -->
     <div id="admin-modal" class="modal-overlay admin-panel-modal">
         <div class="modal">
@@ -2193,18 +2192,18 @@
             </button>
             <div class="modal-title">Админ панель</div>
             <div class="modal-text">Генератор 6-значных кодов</div>
-
+            
             <div class="codes-list" id="codes-list">
                 <!-- Коды будут добавлены через JavaScript -->
             </div>
-
+            
             <button class="btn generate-code-btn" id="generate-code-btn">
                 <i class="fas fa-plus-circle"></i>
                 <span>Сгенерировать новый код</span>
             </button>
         </div>
     </div>
-
+    
     <!-- Контейнер контента -->
     <div class="content-container">
         <!-- Страница входа (код) -->
@@ -2212,9 +2211,9 @@
             <div class="runner-icon">
                 <i class="fas fa-running"></i>
             </div>
-
+            
             <div class="logo">Мегапрятки</div>
-
+            
             <!-- Форма ввода кода -->
             <div class="input-container">
                 <div class="code-inputs">
@@ -2225,18 +2224,18 @@
                     <input type="text" maxlength="1" class="code-input" data-index="4">
                     <input type="text" maxlength="1" class="code-input" data-index="5">
                 </div>
-
+                
                 <button id="submit-btn" class="btn" disabled>
                     <i class="fas fa-gamepad"></i>
                     <span id="login-btn-text">ВОЙТИ В ИГРУ</span>
                 </button>
-
+                
                 <div id="status-message" class="status-message">
                     <i class="fas fa-key"></i>
                     <span id="status-text">Введите 6-значный код игры</span>
                 </div>
             </div>
-
+            
             <!-- Информационные блоки -->
             <div class="info-boxes">
                 <div class="info-box">
@@ -2248,7 +2247,7 @@
                         <div class="info-desc" id="internet-desc">Для синхронизации с другими игроками и обновления карты в реальном времени</div>
                     </div>
                 </div>
-
+                
                 <div class="info-box">
                     <div class="info-icon gps-icon">
                         <i class="fas fa-map-marker-alt"></i>
@@ -2260,13 +2259,13 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Главная страница (правила и таймер) -->
         <div id="home-page" class="page">
             <div class="page-header">
                 <div class="logo">Мегапрятки</div>
             </div>
-
+            
             <!-- Таймер до 14 февраля -->
             <div class="countdown-container">
                 <div class="countdown-title">
@@ -2276,13 +2275,13 @@
                 <div id="countdown-timer" class="countdown-timer">00:00:00</div>
                 <div class="countdown-date" id="countdown-date">14 февраля 2026, 14:20</div>
             </div>
-
+            
             <!-- Адрес -->
             <div class="address-container" id="address-text">
                 <i class="fas fa-map-marker-alt"></i>
                 г Тюмень, двор дома Елизарова 30.
             </div>
-
+            
             <!-- Правила игры -->
             <div class="rules-container">
                 <div class="rules-header" id="rules-header">
@@ -2294,39 +2293,32 @@
                         <i class="fas fa-chevron-up"></i>
                     </div>
                 </div>
-
+                
                 <div class="rules-content" id="rules-content">
                     <div class="rules-subtitle" id="rules-subtitle-text">
-                        (правила будут постоянно меняться) (иногда)
+                        (правила будут постоянно меняться)
                     </div>
                     <div class="rules-text" id="rules-text">
-                        <p><strong>Основные правила:</strong></p>
-                        <ul>
-                            <li>Игра проходит в реальном времени на территории, ограниченной игровыми зонами</li>
-                            <li>Участники делятся на команды: Прячущиеся и Искатели</li>
-                            <li>Прячущиеся должны найти укрытие и оставаться в зеленой зоне</li>
-                            <li>Искатели должны найти всех Прячущихся до истечения времени</li>
-                            <li>Каждая команда имеет своего капитана</li>
-                            <li>Использование GPS обязательно для всех участников</li>
-                        </ul>
-
-                        <p><strong>Зоны:</strong></p>
-                        <ul>
-                            <li><strong>Зеленая зона:</strong> Безопасная территория, где можно свободно перемещаться</li>
-                            <li><strong>Желтая зона:</strong> Предупреждающая зона, через 15 минут становится красной</li>
-                            <li><strong>Красная зона:</strong> Запретная территория, необходимо покинуть в течение 30 секунд</li>
-                        </ul>
-
-                        <p><strong>Победа:</strong></p>
-                        <ul>
-                            <li>Команда Искателей побеждает, если находит всех Прячущихся</li>
-                            <li>Команда Прячущихся побеждает, если хотя бы один участник не найден до конца игры</li>
-                            <li>Дисквалификация за нахождение в красной зоне более 30 секунд</li>
-                        </ul>
+                        <ol>
+                            <li>Не мешать нормальной игре</li>
+                            <li>Следовать правилам</li>
+                            <li>Никакого тимминга</li>
+                            <li>Нельзя заходить на запретные зоны.</li>
+                            <li>Нельзя рассылать приложение игры третьим лицам</li>
+                            <li>Запрещена рассылка информации о прятках.</li>
+                            <li>Запрещены драки</li>
+                            <li>Запрещена нечестная игра</li>
+                            <li>Запрещено уходить из игры без уведомления об этом организаторам.</li>
+                            <li>Незнание правил не освобождает вас от ответственности</li>
+                            <li>Запрещено провождение своих игр нашей тематики без согласия организаторов.</li>
+                            <li>Каждый участник игры должен находится в данном канале.</li>
+                            <li>Вы обязаны подчиняться организаторам</li>
+                            <li>Веселитесь!</li>
+                        </ol>
                     </div>
                 </div>
             </div>
-
+            
             <!-- Награда -->
             <div class="reward-container">
                 <div class="reward-title">
@@ -2336,20 +2328,27 @@
                 <img src="https://kfs-menu.ru/images/menu/aytvister_mini.png" alt="Награда" class="reward-image">
             </div>
         </div>
-
+        
         <!-- Страница карты -->
         <div id="map-page" class="page">
             <div class="map-container" id="map-container">
                 <!-- Яндекс Карта или сообщение об ошибке -->
             </div>
-
+            
             <!-- Кнопка настроек зон (шестеренка) -->
             <div id="zone-settings-btn-container" style="display: none; position: absolute; top: 15px; right: 15px; z-index: 100;">
                 <div class="map-btn zone-settings-btn" id="zone-settings-btn">
                     <i class="fas fa-cog"></i>
                 </div>
             </div>
-
+            
+            <!-- Кнопка "Показать игроков" для искателей -->
+            <button class="reveal-players-btn" id="reveal-players-btn">
+                <i class="fas fa-eye"></i>
+                <span>Показать игроков</span>
+                <span class="timer" id="reveal-timer">10:00</span>
+            </button>
+            
             <!-- Информация о зонах -->
             <div class="zones-info">
                 <div class="zone-item zone-green" data-zone="green">
@@ -2361,7 +2360,7 @@
                         <p id="green-zone-desc">Мирная зона, где свободно можно передвигаться без ограничений</p>
                     </div>
                 </div>
-
+                
                 <div class="zone-item zone-yellow" data-zone="yellow">
                     <div class="zone-icon">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -2371,7 +2370,7 @@
                         <p id="yellow-zone-desc">Станет красной через 15 минут после входа. Будьте готовы покинуть зону</p>
                     </div>
                 </div>
-
+                
                 <div class="zone-item zone-red" data-zone="red">
                     <div class="zone-icon">
                         <i class="fas fa-skull-crossbones"></i>
@@ -2382,7 +2381,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <!-- Список команд -->
             <div class="teams-section" id="teams-section" style="display: none;">
                 <div class="teams-header">
@@ -2399,7 +2398,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Страница настроек -->
         <div id="settings-page" class="page">
             <!-- Админ панель (только для разработчика) -->
@@ -2408,9 +2407,9 @@
                     <i class="fas fa-shield-alt"></i>
                 </button>
             </div>
-
+            
             <div class="settings-title" id="settings-title-text">Настройки</div>
-
+            
             <div class="settings-container">
                 <div class="settings-item" id="geolocation-setting">
                     <div class="settings-item-content">
@@ -2427,7 +2426,7 @@
                         <span class="slider"></span>
                     </label>
                 </div>
-
+                
                 <div class="settings-item">
                     <div class="settings-item-content">
                         <div class="settings-icon">
@@ -2443,7 +2442,7 @@
                         <span class="slider"></span>
                     </label>
                 </div>
-
+                
                 <div class="settings-item">
                     <div class="settings-item-content">
                         <div class="settings-icon">
@@ -2459,7 +2458,7 @@
                         <span class="slider"></span>
                     </label>
                 </div>
-
+                
                 <!-- Выбор языка -->
                 <div class="language-selector">
                     <div class="language-title">
@@ -2477,20 +2476,20 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Кнопки действий -->
                 <div class="action-buttons">
                     <button class="action-btn logout-btn" id="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
                         <span id="logout-text">Выйти из аккаунта</span>
                     </button>
-
+                    
                     <button class="action-btn delete-btn" id="delete-btn">
                         <i class="fas fa-trash-alt"></i>
                         <span id="delete-text">Удалить аккаунт</span>
                     </button>
                 </div>
-
+                
                 <!-- О приложении -->
                 <div class="about-app">
                     <h3 id="about-title">О приложении</h3>
@@ -2500,19 +2499,19 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Нижняя панель навигации -->
     <div class="bottom-nav" id="bottom-nav">
         <div class="nav-item" data-page="map-page">
             <i class="fas fa-map-marked-alt nav-icon"></i>
             <span class="nav-label" id="nav-map-text">Карта</span>
         </div>
-
+        
         <div class="nav-item" data-page="home-page">
             <i class="fas fa-home nav-icon"></i>
             <span class="nav-label" id="nav-home-text">Главная</span>
         </div>
-
+        
         <div class="nav-item" data-page="settings-page">
             <i class="fas fa-cog nav-icon"></i>
             <span class="nav-label" id="nav-settings-text">Настройки</span>
@@ -2524,7 +2523,8 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.setBackgroundColor('#0a0a0a');
-
+        tg.setHeaderColor('#0a0a0a'); // Убираем желтые снежинки вверху
+        
         // Элементы DOM
         const codeInputs = document.querySelectorAll('.code-input');
         const submitBtn = document.getElementById('submit-btn');
@@ -2539,14 +2539,12 @@
         const navItems = document.querySelectorAll('.nav-item');
         const pages = document.querySelectorAll('.page');
         const mapContainer = document.getElementById('map-container');
-        const particlesContainer = document.getElementById('particles');
-        const rulesHeader = document.getElementById('rules-header');
-        const rulesToggle = document.getElementById('rules-toggle');
-        const rulesContent = document.getElementById('rules-content');
         const telegramIcon = document.getElementById('telegram-icon');
         const zoneNotification = document.getElementById('zone-notification');
         const zoneNotificationText = document.getElementById('zone-notification-text');
-
+        const revealPlayersBtn = document.getElementById('reveal-players-btn');
+        const revealTimer = document.getElementById('reveal-timer');
+        
         // Модальные окна
         const logoutModal = document.getElementById('logout-modal');
         const deleteModal = document.getElementById('delete-modal');
@@ -2557,7 +2555,7 @@
         const zoneInfoModal = document.getElementById('zone-info-modal');
         const zoneEditModal = document.getElementById('zone-edit-modal');
         const adminModal = document.getElementById('admin-modal');
-
+        
         // Элементы настроек
         const geolocationToggle = document.getElementById('geolocation-toggle');
         const geolocationSetting = document.getElementById('geolocation-setting');
@@ -2572,24 +2570,24 @@
         const teamsEditBtn = document.getElementById('teams-edit-btn');
         const adminPanel = document.getElementById('admin-panel');
         const adminBtn = document.getElementById('admin-btn');
-
+        
         // Элементы редактора команд
         const colorPicker = document.getElementById('color-picker');
         const colorPreview = document.getElementById('color-preview');
         const addMembersBtn = document.getElementById('add-members-btn');
         const membersInput = document.getElementById('members-input');
         const teamTypeOptions = document.querySelectorAll('.team-type-option');
-
+        
         // Элементы редактирования зон
         const zoneReduceBtn = document.getElementById('zone-reduce-btn');
         const zoneResetBtn = document.getElementById('zone-reset-btn');
         const greenZoneRadius = document.getElementById('green-zone-radius');
         const yellowZoneRadius = document.getElementById('yellow-zone-radius');
-
+        
         // Элементы админ панели
         const generateCodeBtn = document.getElementById('generate-code-btn');
         const codesList = document.getElementById('codes-list');
-
+        
         // Текстовые элементы для перевода
         const textElements = {
             // Страница входа
@@ -2599,14 +2597,14 @@
             'internet-desc': { ru: 'Для синхронизации с другими игроками и обновления карты в реальном времени', en: 'For synchronization with other players and real-time map updates' },
             'gps-title': { ru: 'Используется геолокация', en: 'Geolocation used' },
             'gps-desc': { ru: 'Для отслеживания вашего местоположения на карте и определения зон', en: 'For tracking your location on the map and determining zones' },
-
+            
             // Главная страница
             'countdown-title-text': { ru: 'До начала игры осталось:', en: 'Time until game starts:' },
             'countdown-date': { ru: '14 февраля 2026, 14:20', en: 'February 14, 2026, 14:20' },
             'address-text': { ru: 'г Тюмень, двор дома Елизарова 30.', en: 'Tyumen, yard of Elizarova 30.' },
             'rules-title-text': { ru: 'Правила игры', en: 'Game Rules' },
-            'rules-subtitle-text': { ru: '(правила будут постоянно меняться) (иногда)', en: '(rules will change constantly) (sometimes)' },
-
+            'rules-subtitle-text': { ru: '(правила будут постоянно меняться)', en: '(rules will change constantly)' },
+            
             // Карта
             'green-zone-title': { ru: 'Зеленая зона', en: 'Green Zone' },
             'green-zone-desc': { ru: 'Мирная зона, где свободно можно передвигаться без ограничений', en: 'Peaceful zone where you can move freely without restrictions' },
@@ -2615,7 +2613,7 @@
             'red-zone-title': { ru: 'Красная зона', en: 'Red Zone' },
             'red-zone-desc': { ru: 'Покиньте в течение 30 секунд, чтобы не быть дисквалифицированным', en: 'Leave within 30 seconds to avoid disqualification' },
             'teams-title-text': { ru: 'Команды', en: 'Teams' },
-
+            
             // Настройки
             'settings-title-text': { ru: 'Настройки', en: 'Settings' },
             'geolocation-title': { ru: 'Геолокация', en: 'Geolocation' },
@@ -2626,14 +2624,14 @@
             'sounds-desc': { ru: 'Включить звуковые оповещения', en: 'Enable sound notifications' },
             'language-title-text': { ru: 'Язык / Language', en: 'Language / Язык' },
             'logout-text': { ru: 'Выйти из аккаунта', en: 'Log Out' },
-            'delete-text': { ru: 'Удалить аккаунт', en: 'Delete Account' },
+            'delete-text': { ru: 'Удалить аккаунта', en: 'Delete Account' },
             'about-title': { ru: 'О приложении', en: 'About' },
-
+            
             // Навигация
             'nav-map-text': { ru: 'Карта', en: 'Map' },
             'nav-home-text': { ru: 'Главная', en: 'Home' },
             'nav-settings-text': { ru: 'Настройки', en: 'Settings' },
-
+            
             // Модальные окна
             'logout-modal-title': { ru: 'Выход из аккаунта', en: 'Log Out' },
             'logout-modal-text': { ru: 'Вы точно хотите выйти из аккаунта?', en: 'Are you sure you want to log out?' },
@@ -2646,7 +2644,7 @@
             },
             'delete-cancel-text': { ru: 'Нет', en: 'No' },
             'delete-confirm-text': { ru: 'Да', en: 'Yes' },
-
+            
             // Оповещения
             'geolocation-warning-text': { 
                 ru: '<strong>Внимание!</strong> С отключенной геолокацией вы не сможете играть.', 
@@ -2654,10 +2652,10 @@
             },
             'welcome-text': { ru: 'Успешный вход в игру!', en: 'Successfully entered the game!' }
         };
-
-        // Фиксированный код игры
+        
+        // Фиксированный код игры для разработчика
         const DEVELOPER_CODE = '045667';
-
+        
         // Переменные состояния
         let enteredCode = '';
         let isCodeCorrect = false;
@@ -2675,7 +2673,12 @@
         let yellowZoneRadiusValue = 1.2; // в км
         let locationWatchId = null;
         let lastZoneCheck = null;
-
+        let isGameStarted = false; // Флаг начала игры
+        let revealCooldown = 600; // 10 минут в секундах
+        let revealActive = false; // Активно ли отображение игроков
+        let revealTimeout = null; // Таймер для отображения игроков
+        let revealEndTime = 0; // Время окончания отображения
+        
         // База данных в localStorage
         const DB = {
             // Инициализация базы данных
@@ -2683,7 +2686,7 @@
                 if (!localStorage.getItem('megahide_db_initialized')) {
                     // Создаем начальную структуру базы данных
                     const initialData = {
-                        version: '1.0',
+                        version: '1.1',
                         users: {},
                         teams: {},
                         generatedCodes: [],
@@ -2695,242 +2698,283 @@
                         gameSettings: {
                             startDate: '2026-02-14T14:20:00',
                             maxTeamMembers: 7
-                        }
+                        },
+                        playerLocations: {}, // Хранение местоположений игроков
+                        lastRevealTime: 0, // Время последнего использования кнопки "Показать игроков"
+                        revealDuration: 60 // Длительность отображения в секундах
                     };
-
+                    
                     localStorage.setItem('megahide_db', JSON.stringify(initialData));
                     localStorage.setItem('megahide_db_initialized', 'true');
                 }
             },
-
+            
             // Получить всю базу данных
             getDB: function() {
                 const dbJson = localStorage.getItem('megahide_db');
                 return dbJson ? JSON.parse(dbJson) : null;
             },
-
+            
             // Сохранить всю базу данных
             saveDB: function(db) {
                 localStorage.setItem('megahide_db', JSON.stringify(db));
             },
-
+            
             // Добавить/обновить пользователя
             saveUser: function(userCode, userData) {
                 const db = this.getDB();
                 if (!db) return false;
-
+                
                 db.users[userCode] = {
                     ...userData,
                     lastLogin: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
                 };
-
+                
                 this.saveDB(db);
                 return true;
             },
-
+            
             // Получить пользователя
             getUser: function(userCode) {
                 const db = this.getDB();
                 return db ? db.users[userCode] : null;
             },
-
+            
             // Получить всех пользователей
             getAllUsers: function() {
                 const db = this.getDB();
                 return db ? db.users : {};
             },
-
+            
+            // Сохранить местоположение игрока
+            savePlayerLocation: function(userCode, coords) {
+                const db = this.getDB();
+                if (!db) return false;
+                
+                if (!db.playerLocations) {
+                    db.playerLocations = {};
+                }
+                
+                db.playerLocations[userCode] = {
+                    coords: coords,
+                    timestamp: Date.now()
+                };
+                
+                this.saveDB(db);
+                return true;
+            },
+            
+            // Получить местоположение игрока
+            getPlayerLocation: function(userCode) {
+                const db = this.getDB();
+                return db && db.playerLocations ? db.playerLocations[userCode] : null;
+            },
+            
+            // Получить все местоположения игроков
+            getAllPlayerLocations: function() {
+                const db = this.getDB();
+                return db && db.playerLocations ? db.playerLocations : {};
+            },
+            
+            // Получить время последнего раскрытия
+            getLastRevealTime: function() {
+                const db = this.getDB();
+                return db ? db.lastRevealTime || 0 : 0;
+            },
+            
+            // Сохранить время раскрытия
+            setLastRevealTime: function(timestamp) {
+                const db = this.getDB();
+                if (!db) return false;
+                
+                db.lastRevealTime = timestamp;
+                this.saveDB(db);
+                return true;
+            },
+            
             // Добавить/обновить команду
             saveTeam: function(team) {
                 const db = this.getDB();
                 if (!db) return false;
-
+                
                 if (!team.id) {
                     // Создаем новый ID
                     const teamIds = Object.keys(db.teams).map(id => parseInt(id));
                     team.id = teamIds.length > 0 ? Math.max(...teamIds) + 1 : 1;
                 }
-
+                
                 db.teams[team.id] = {
                     ...team,
                     updatedAt: new Date().toISOString()
                 };
-
+                
                 this.saveDB(db);
                 return team.id;
             },
-
+            
             // Получить команду
             getTeam: function(teamId) {
                 const db = this.getDB();
                 return db ? db.teams[teamId] : null;
             },
-
+            
             // Получить все команды
             getAllTeams: function() {
                 const db = this.getDB();
                 return db ? db.teams : {};
             },
-
+            
             // Удалить команду
             deleteTeam: function(teamId) {
                 const db = this.getDB();
                 if (!db || !db.teams[teamId]) return false;
-
+                
                 delete db.teams[teamId];
                 this.saveDB(db);
                 return true;
             },
-
+            
             // Добавить пользователя в команду
             addUserToTeam: function(userCode, teamId) {
                 const db = this.getDB();
                 if (!db || !db.teams[teamId]) return false;
-
+                
                 const team = db.teams[teamId];
                 if (!team.members.includes(userCode)) {
                     team.members.push(userCode);
                     team.updatedAt = new Date().toISOString();
                     this.saveDB(db);
                 }
-
+                
                 return true;
             },
-
+            
             // Удалить пользователя из команды
             removeUserFromTeam: function(userCode, teamId) {
                 const db = this.getDB();
                 if (!db || !db.teams[teamId]) return false;
-
+                
                 const team = db.teams[teamId];
                 const index = team.members.indexOf(userCode);
                 if (index !== -1) {
                     team.members.splice(index, 1);
-
+                    
                     // Если капитан удален, назначаем нового
                     if (team.captain === userCode && team.members.length > 0) {
                         team.captain = team.members[0];
                     }
-
+                    
                     team.updatedAt = new Date().toISOString();
                     this.saveDB(db);
                 }
-
+                
                 return true;
             },
-
+            
             // Генерация кодов
             addGeneratedCode: function(code) {
                 const db = this.getDB();
                 if (!db) return false;
-
+                
                 if (!db.generatedCodes.includes(code)) {
                     db.generatedCodes.push(code);
                     this.saveDB(db);
                 }
-
+                
                 return true;
             },
-
+            
             // Получить все сгенерированные коды
             getGeneratedCodes: function() {
                 const db = this.getDB();
                 return db ? db.generatedCodes : [];
             },
-
+            
             // Удалить сгенерированный код
             removeGeneratedCode: function(code) {
                 const db = this.getDB();
                 if (!db) return false;
-
+                
                 const index = db.generatedCodes.indexOf(code);
                 if (index !== -1) {
                     db.generatedCodes.splice(index, 1);
                     this.saveDB(db);
                 }
-
+                
                 return true;
             },
-
+            
             // Проверить код
             checkCode: function(code) {
                 const db = this.getDB();
                 if (!db) return false;
-
+                
                 // Проверяем разработчика
                 if (code === DEVELOPER_CODE) return 'developer';
-
+                
                 // Проверяем сгенерированные коды
                 if (db.generatedCodes.includes(code)) return 'user';
-
+                
+                // Проверяем существующих пользователей
+                if (db.users[code]) return 'user';
+                
                 return false;
             },
-
+            
             // Сохранить настройки зон
             saveZoneSettings: function(greenRadius, yellowRadius) {
                 const db = this.getDB();
                 if (!db) return false;
-
+                
                 db.zones.greenRadius = greenRadius;
                 db.zones.yellowRadius = yellowRadius;
                 this.saveDB(db);
                 return true;
             },
-
+            
             // Получить настройки зон
             getZoneSettings: function() {
                 const db = this.getDB();
                 return db ? db.zones : { greenRadius: 1.0, yellowRadius: 1.2, center: [57.1522, 65.5272] };
             }
         };
-
+        
         // Инициализация базы данных
         DB.init();
-
+        
         // Центр игры (Елизарова 30, Тюмень)
         const GAME_CENTER = [57.1522, 65.5272];
-
+        
         // Загружаем настройки зон
         const zoneSettings = DB.getZoneSettings();
         greenZoneRadiusValue = zoneSettings.greenRadius;
         yellowZoneRadiusValue = zoneSettings.yellowRadius;
-
+        
         let currentUserCode = ''; // Текущий пользователь
         let editingTeam = null; // Команда в редакторе
         let editingMembers = []; // Участники в редакторе
         let deleteTarget = { type: '', id: null, name: '' }; // Цель для удаления
-
+        
         // Целевая дата: 14 февраля 2026, 14:20
         const targetDate = new Date('February 14, 2026 14:20:00').getTime();
-
-        // Создание эффекта частиц
-        function createParticles() {
-            for (let i = 0; i < 40; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.animationDelay = `${Math.random() * 15}s`;
-                particle.style.animationDuration = `${15 + Math.random() * 10}s`;
-                particlesContainer.appendChild(particle);
-            }
-        }
-
+        
         // Функция таймера обратного отсчета
         function updateCountdown() {
             const now = new Date().getTime();
             const timeLeft = targetDate - now;
-
+            
             if (timeLeft <= 0) {
                 document.getElementById('countdown-timer').textContent = currentLanguage === 'ru' ? 'Игра началась!' : 'Game started!';
+                isGameStarted = true;
                 return;
             }
-
+            
             const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
+            
             if (days > 0) {
                 document.getElementById('countdown-timer').textContent = 
                     `${days}${currentLanguage === 'ru' ? 'д ' : 'd '}${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
@@ -2939,12 +2983,12 @@
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
         }
-
+        
         // Функция обновления состояния кнопки
         function updateSubmitButton() {
             const isComplete = enteredCode.length === 6;
             submitBtn.disabled = !isComplete;
-
+            
             if (isComplete) {
                 submitBtn.innerHTML = `<i class="fas fa-gamepad"></i> <span id="login-btn-text">${currentLanguage === 'ru' ? 'ВОЙТИ В ИГРУ' : 'ENTER GAME'}</span>`;
                 submitBtn.classList.remove('success');
@@ -2953,11 +2997,11 @@
                 submitBtn.classList.remove('success');
             }
         }
-
+        
         // Функция проверки и подсветки кода
         function checkAndHighlightCode() {
             const isComplete = enteredCode.length === 6;
-
+            
             if (!isComplete) {
                 // Сбрасываем все подсветки если код не полный
                 codeInputs.forEach(input => {
@@ -2966,13 +3010,13 @@
                 allInputsGreen = false;
                 return;
             }
-
+            
             // Проверяем код в базе данных
             const codeCheck = DB.checkCode(enteredCode);
             isCodeCorrect = codeCheck !== false;
             isDeveloper = codeCheck === 'developer';
             currentUserCode = enteredCode; // Устанавливаем код пользователя
-
+            
             if (isCodeCorrect) {
                 // Сохраняем пользователя в базе данных
                 const userData = {
@@ -2980,7 +3024,7 @@
                     isDeveloper: isDeveloper,
                     joinedAt: new Date().toISOString()
                 };
-
+                
                 if (tg.initDataUnsafe?.user) {
                     const tgUser = tg.initDataUnsafe.user;
                     userData.telegramId = tgUser.id;
@@ -2988,33 +3032,33 @@
                     userData.lastName = tgUser.last_name;
                     userData.username = tgUser.username;
                 }
-
+                
                 DB.saveUser(enteredCode, userData);
-
+                
                 // Подсвечиваем все поля зеленым
                 codeInputs.forEach(input => {
                     input.classList.add('correct');
                     input.classList.remove('incorrect');
                 });
                 allInputsGreen = true;
-
+                
                 // Обновляем кнопку
                 submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> <span id="login-btn-text">' + (currentLanguage === 'ru' ? 'ЗАХОДИМ...' : 'ENTERING...') + '</span>';
                 submitBtn.classList.add('success');
-
+                
                 // Показываем сообщение
                 statusIcon.className = 'fas fa-check-circle';
                 statusText.innerHTML = currentLanguage === 'ru' ? '<strong>Код принят!</strong> Подключаемся...' : '<strong>Code accepted!</strong> Connecting...';
                 statusMessage.className = 'status-message success';
-
+                
                 // Эффект успеха
                 submitBtn.style.animation = 'pulseCorrect 0.5s ease';
-
+                
                 // Через 1.5 секунды входим в игру
                 setTimeout(() => {
                     loginSuccess();
                 }, 1500);
-
+                
             } else {
                 // Подсвечиваем красным
                 codeInputs.forEach(input => {
@@ -3022,12 +3066,12 @@
                     input.classList.remove('correct');
                 });
                 allInputsGreen = false;
-
+                
                 // Показываем сообщение об ошибке
                 statusIcon.className = 'fas fa-exclamation-triangle';
                 statusText.innerHTML = currentLanguage === 'ru' ? '<strong>Неверный код</strong>' : '<strong>Wrong code</strong>';
                 statusMessage.className = 'status-message error';
-
+                
                 // Сбрасываем через 2 секунды
                 setTimeout(() => {
                     enteredCode = '';
@@ -3043,39 +3087,39 @@
                 }, 2000);
             }
         }
-
+        
         // Функция успешного входа
         function loginSuccess() {
             isLoggedIn = true;
-
+            
             // Показываем нижнюю панель навигации
             bottomNav.style.display = 'flex';
-
+            
             // Переключаемся на главную страницу
             switchPage('home-page');
-
+            
             // Показываем уведомление
             welcomeNotice.style.display = 'flex';
             setTimeout(() => {
                 welcomeNotice.style.display = 'none';
             }, 3000);
-
+            
             // Если разработчик, показываем кнопку настроек зон и админ панель
             if (isDeveloper) {
                 zoneSettingsBtnContainer.style.display = 'block';
                 adminPanel.style.display = 'block';
             }
-
+            
             // Всегда показываем секцию команд (для всех игроков)
             teamsSection.style.display = 'block';
             updateTeamsList();
-
+            
             // Обновляем сгенерированные коды
             updateGeneratedCodes();
-
+            
             // Запускаем отслеживание геолокации
             startGeolocationTracking();
-
+            
             // Показываем уведомление Telegram
             if (tg.initDataUnsafe?.user) {
                 const user = tg.initDataUnsafe.user;
@@ -3085,21 +3129,25 @@
                     buttons: [{ type: 'ok' }]
                 });
             }
-
+            
             console.log('Пользователь вошел в игру с кодом:', enteredCode, 'Разработчик:', isDeveloper);
         }
-
+        
         // Запуск отслеживания геолокации
         function startGeolocationTracking() {
             if (!geolocationEnabled || !isLoggedIn) return;
-
+            
             if (locationWatchId) {
                 navigator.geolocation.clearWatch(locationWatchId);
             }
-
+            
             locationWatchId = navigator.geolocation.watchPosition(
                 (position) => {
-                    checkPlayerZone(position.coords);
+                    savePlayerPosition(position.coords);
+                    // Проверяем зону только если игра началась и карта загружена
+                    if (isGameStarted && map) {
+                        checkPlayerZone(position.coords);
+                    }
                 },
                 (error) => {
                     console.error('Ошибка геолокации:', error);
@@ -3116,21 +3164,28 @@
                 }
             );
         }
-
+        
+        // Сохранить позицию игрока
+        function savePlayerPosition(coords) {
+            if (!currentUserCode) return;
+            
+            DB.savePlayerLocation(currentUserCode, [coords.latitude, coords.longitude]);
+        }
+        
         // Проверка зоны игрока
         function checkPlayerZone(coords) {
             // Проверяем не чаще чем раз в 5 секунд
             const now = Date.now();
             if (lastZoneCheck && now - lastZoneCheck < 5000) return;
             lastZoneCheck = now;
-
+            
             const playerCoords = [coords.latitude, coords.longitude];
             const distance = getDistance(GAME_CENTER, playerCoords);
-
+            
             let zone = 'green';
             let message = '';
             let notificationType = '';
-
+            
             if (distance <= greenZoneRadiusValue) {
                 zone = 'green';
             } else if (distance <= yellowZoneRadiusValue) {
@@ -3146,32 +3201,32 @@
                     'You are in the forbidden zone, you have 30 seconds to return to the allowed territory';
                 notificationType = 'red';
             }
-
+            
             // Показываем уведомление если игрок в желтой или красной зоне
-            if (notificationType) {
+            if (notificationType && isGameStarted) {
                 showZoneNotification(message, notificationType);
             }
-
+            
             console.log('Игрок в зоне:', zone, 'Расстояние:', distance.toFixed(2), 'км');
         }
-
+        
         // Показать уведомление о зоне
         function showZoneNotification(message, type) {
             zoneNotificationText.textContent = message;
             zoneNotification.className = `zone-notification ${type}`;
             zoneNotification.style.display = 'flex';
-
+            
             // Автоматически скрываем через 5 секунд
             setTimeout(() => {
                 zoneNotification.style.display = 'none';
             }, 5000);
         }
-
+        
         // Вычисление расстояния между двумя точками (в км)
         function getDistance(coord1, coord2) {
             const [lat1, lon1] = coord1;
             const [lat2, lon2] = coord2;
-
+            
             const R = 6371; // Радиус Земли в км
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
@@ -3181,12 +3236,12 @@
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
             return R * c;
         }
-
+        
         // Функция выхода из аккаунта
         function logout() {
             logoutModal.style.display = 'flex';
         }
-
+        
         // Функция подтверждения выхода
         function confirmLogout() {
             logoutModal.style.display = 'none';
@@ -3194,13 +3249,13 @@
             isDeveloper = false;
             bottomNav.style.display = 'none';
             switchPage('login-page');
-
+            
             // Останавливаем отслеживание геолокации
             if (locationWatchId) {
                 navigator.geolocation.clearWatch(locationWatchId);
                 locationWatchId = null;
             }
-
+            
             // Сбрасываем форму входа
             enteredCode = '';
             codeInputs.forEach(input => {
@@ -3211,24 +3266,25 @@
             submitBtn.disabled = true;
             statusIcon.className = 'fas fa-key';
             statusMessage.className = 'status-message';
-
+            
             // Скрываем кнопку настроек зон и админ панель
             zoneSettingsBtnContainer.style.display = 'none';
             teamsSection.style.display = 'none';
             adminPanel.style.display = 'none';
-
+            revealPlayersBtn.style.display = 'none';
+            
             console.log('Пользователь вышел из аккаунта');
         }
-
+        
         // Функция удаления аккаунта
         function deleteAccount() {
             deleteModal.style.display = 'flex';
         }
-
+        
         // Функция подтверждения удаления
         function confirmDelete() {
             deleteModal.style.display = 'none';
-
+            
             // Удаляем пользователя из базы данных
             const db = DB.getDB();
             if (db && db.users[currentUserCode]) {
@@ -3237,33 +3293,33 @@
                     const index = team.members.indexOf(currentUserCode);
                     if (index !== -1) {
                         team.members.splice(index, 1);
-
+                        
                         // Если капитан удален, назначаем нового
                         if (team.captain === currentUserCode && team.members.length > 0) {
                             team.captain = team.members[0];
                         }
-
+                        
                         team.updatedAt = new Date().toISOString();
                     }
                 });
-
+                
                 // Удаляем пользователя
                 delete db.users[currentUserCode];
                 DB.saveDB(db);
             }
-
+            
             // Выходим из аккаунта
             isLoggedIn = false;
             isDeveloper = false;
             bottomNav.style.display = 'none';
             switchPage('login-page');
-
+            
             // Останавливаем отслеживание геолокации
             if (locationWatchId) {
                 navigator.geolocation.clearWatch(locationWatchId);
                 locationWatchId = null;
             }
-
+            
             // Сбрасываем форму входа
             enteredCode = '';
             codeInputs.forEach(input => {
@@ -3274,16 +3330,17 @@
             submitBtn.disabled = true;
             statusIcon.className = 'fas fa-key';
             statusMessage.className = 'status-message';
-
+            
             // Скрываем кнопку настроек зон
             zoneSettingsBtnContainer.style.display = 'none';
             teamsSection.style.display = 'none';
             adminPanel.style.display = 'none';
-
+            revealPlayersBtn.style.display = 'none';
+            
             tg.showAlert(currentLanguage === 'ru' ? 'Аккаунт удален' : 'Account deleted');
             console.log('Аккаунт пользователя удален');
         }
-
+        
         // Функция переключения страниц
         function switchPage(pageId) {
             // Обновляем активную страницу
@@ -3291,7 +3348,7 @@
                 page.classList.remove('active');
             });
             document.getElementById(pageId).classList.add('active');
-
+            
             // Обновляем активную кнопку навигации
             navItems.forEach(item => {
                 item.classList.remove('active');
@@ -3299,20 +3356,27 @@
                     item.classList.add('active');
                 }
             });
-
+            
             currentPage = pageId;
-
+            
+            // Показываем/скрываем иконку телеграма только на главной
+            if (pageId === 'home-page') {
+                telegramIcon.style.display = 'flex';
+            } else {
+                telegramIcon.style.display = 'none';
+            }
+            
             // Обработка страницы карты
             if (pageId === 'map-page') {
                 updateMapDisplay();
             }
-
+            
             // Обработка страницы настроек
             if (pageId === 'settings-page') {
                 updateGeolocationWarning();
             }
         }
-
+        
         // Обновление отображения карты
         function updateMapDisplay() {
             if (!isLoggedIn) {
@@ -3323,6 +3387,7 @@
                         ${currentLanguage === 'ru' ? 'Войдите в игру, чтобы получить доступ к карте' : 'Log in to access the map'}
                     </div>
                 `;
+                revealPlayersBtn.style.display = 'none';
             } else if (!geolocationEnabled) {
                 mapContainer.innerHTML = `
                     <div class="map-error">
@@ -3333,19 +3398,18 @@
                         </div>
                     </div>
                 `;
+                revealPlayersBtn.style.display = 'none';
             } else {
                 // Пытаемся инициализировать Яндекс Карты
                 initYandexMap();
             }
         }
-
+        
         // Инициализация Яндекс Карт
         function initYandexMap() {
             // Проверяем, загружена ли библиотека Яндекс Карт
-            if (typeof ymaps !== 'undefined' && window.ymaps) {
-                ymaps = window.ymaps;
-
-                ymaps.ready(() => {
+            if (typeof window.ymaps !== 'undefined') {
+                window.ymaps.ready(() => {
                     try {
                         createMap();
                     } catch (error) {
@@ -3357,7 +3421,7 @@
                 // Библиотека не загрузилась
                 console.error('Яндекс Карты не загрузились');
                 showMapError();
-
+                
                 // Пытаемся перезагрузить через 3 секунды
                 setTimeout(() => {
                     if (currentPage === 'map-page') {
@@ -3366,7 +3430,7 @@
                 }, 3000);
             }
         }
-
+        
         // Показать ошибку карты
         function showMapError() {
             mapContainer.innerHTML = `
@@ -3378,94 +3442,92 @@
                     </div>
                 </div>
             `;
+            revealPlayersBtn.style.display = 'none';
         }
-
+        
         // Создание карты
         function createMap() {
             try {
                 // Очищаем контейнер
                 mapContainer.innerHTML = '<div id="yandex-map"></div>';
-
+                
                 // Создаем карту
-                map = new ymaps.Map('yandex-map', {
+                map = new window.ymaps.Map('yandex-map', {
                     center: GAME_CENTER,
                     zoom: 14,
                     controls: ['zoomControl']
                 }, {
                     suppressMapOpenBlock: true
                 });
-
+                
                 // Устанавливаем темную тему
                 map.setType('yandex#dark');
-
+                
                 // Добавляем зоны
                 addZonesToMap();
-
+                
                 // Добавляем кнопку определения местоположения
                 addLocationButton();
-
-                // Если разработчик, добавляем метки всех участников
-                if (isDeveloper) {
-                    addAllPlayersMarkers();
-                }
-
-                // Добавляем метки участников команды (если пользователь в команде)
-                addTeamPlayersMarkers();
-
+                
+                // Показываем товарищей по команде
+                addTeammatesToMap();
+                
+                // Показываем кнопку "Показать игроков" для искателей
+                checkRevealButton();
+                
             } catch (error) {
                 console.error('Ошибка создания карты:', error);
                 showMapError();
             }
         }
-
+        
         // Добавление зон на карту
         function addZonesToMap() {
-            if (!map || !ymaps) return;
-
+            if (!map || !window.ymaps) return;
+            
             // Очищаем старые зоны
             map.geoObjects.removeAll();
-
+            
             // Создаем зеленую зону (внутренний круг)
-            const greenZone = new ymaps.Circle([GAME_CENTER, greenZoneRadiusValue * 1000], {}, {
+            const greenZone = new window.ymaps.Circle([GAME_CENTER, greenZoneRadiusValue * 1000], {}, {
                 fillColor: '#4CAF5080',
                 strokeColor: '#4CAF50',
                 strokeWidth: 2
             });
-
+            
             // Создаем желтую зону (внешний круг)
-            const yellowZone = new ymaps.Circle([GAME_CENTER, yellowZoneRadiusValue * 1000], {}, {
+            const yellowZone = new window.ymaps.Circle([GAME_CENTER, yellowZoneRadiusValue * 1000], {}, {
                 fillColor: '#ff980080',
                 strokeColor: '#ff9800',
                 strokeWidth: 2
             });
-
+            
             // Создаем красную зону (вся территория за пределами желтой зоны)
-            // Для этого создаем полигон всей области видимости (упрощенно)
-            const redZoneHint = new ymaps.Placemark(GAME_CENTER, {
+            const redZoneHint = new window.ymaps.Placemark(GAME_CENTER, {
                 balloonContent: currentLanguage === 'ru' ? 
                     'Красная зона: вся территория за пределами желтой зоны' :
                     'Red zone: all territory outside the yellow zone'
             }, {
                 preset: 'islands#redIcon'
             });
-
+            
             // Добавляем зоны на карту
             map.geoObjects.add(yellowZone);
             map.geoObjects.add(greenZone);
             map.geoObjects.add(redZoneHint);
-
+            
             // Добавляем метку центра
-            const centerPlacemark = new ymaps.Placemark(GAME_CENTER, {
+            const centerPlacemark = new window.ymaps.Placemark(GAME_CENTER, {
                 balloonContent: currentLanguage === 'ru' ? 'Центр игры: Елизарова 30' : 'Game center: Elizarova 30'
             }, {
                 preset: 'islands#redCircleIcon'
             });
             map.geoObjects.add(centerPlacemark);
-
+            
             // Автоматически подгоняем масштаб чтобы показать все зоны
             map.setBounds(yellowZone.geometry.getBounds());
         }
-
+        
         // Добавление кнопки определения местоположения
         function addLocationButton() {
             const locationBtn = document.createElement('div');
@@ -3476,7 +3538,7 @@
             locationBtn.style.top = '15px';
             locationBtn.style.left = '15px';
             locationBtn.style.zIndex = '100';
-
+            
             locationBtn.addEventListener('click', () => {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
@@ -3484,15 +3546,15 @@
                             const coords = [position.coords.latitude, position.coords.longitude];
                             if (map) {
                                 map.setCenter(coords, 16);
-
+                                
                                 // Добавляем метку местоположения
-                                const myPlacemark = new ymaps.Placemark(coords, {
+                                const myPlacemark = new window.ymaps.Placemark(coords, {
                                     balloonContent: currentLanguage === 'ru' ? 'Ваше местоположение' : 'Your location'
                                 }, {
                                     preset: 'islands#blueCircleIcon'
                                 });
                                 map.geoObjects.add(myPlacemark);
-
+                                
                                 // Удаляем старую метку через 5 секунд
                                 setTimeout(() => {
                                     if (map) {
@@ -3509,79 +3571,224 @@
                     );
                 }
             });
-
+            
             mapContainer.appendChild(locationBtn);
         }
-
-        // Добавить метки всех участников (только для разработчика)
-        function addAllPlayersMarkers() {
-            if (!map || !isDeveloper) return;
-
-            // Получаем всех пользователей из базы данных
-            const users = DB.getAllUsers();
-
-            Object.values(users).forEach(user => {
-                // Случайные координаты вокруг центра для демонстрации
-                const randomLat = GAME_CENTER[0] + (Math.random() - 0.5) * 0.01;
-                const randomLon = GAME_CENTER[1] + (Math.random() - 0.5) * 0.01;
-
-                const placemark = new ymaps.Placemark([randomLat, randomLon], {
-                    balloonContent: `${user.firstName || 'Игрок'}<br>Код: ${user.code}<br>${user.isDeveloper ? 'Разработчик' : 'Игрок'}`
-                }, {
-                    preset: user.isDeveloper ? 'islands#redCircleIcon' : 'islands#blueCircleIcon'
-                });
-                map.geoObjects.add(placemark);
-            });
-        }
-
-        // Добавить метки участников команды
-        function addTeamPlayersMarkers() {
+        
+        // Добавить товарищей по команде на карту
+        function addTeammatesToMap() {
             if (!map) return;
-
+            
             // Находим команду, в которой состоит пользователь
             const teams = DB.getAllTeams();
             const userTeam = Object.values(teams).find(team => team.members.includes(currentUserCode));
             if (!userTeam) return;
-
-            // Создаем метки для участников команды
+            
+            // Показываем местоположение товарищей по команде
+            const playerLocations = DB.getAllPlayerLocations();
+            
             userTeam.members.forEach(memberCode => {
-                const user = DB.getUser(memberCode);
-                if (user) {
-                    // Случайные координаты вокруг центра для демонстрации
-                    const randomLat = GAME_CENTER[0] + (Math.random() - 0.5) * 0.005;
-                    const randomLon = GAME_CENTER[1] + (Math.random() - 0.5) * 0.005;
-
+                if (memberCode === currentUserCode) return; // Пропускаем себя
+                
+                const location = playerLocations[memberCode];
+                if (location && Date.now() - location.timestamp < 5 * 60 * 1000) { // Данные не старше 5 минут
                     const isCurrentUser = memberCode === currentUserCode;
-                    const placemark = new ymaps.Placemark([randomLat, randomLon], {
-                        balloonContent: `${isCurrentUser ? 'Вы' : 'Товарищ по команде'}<br>Код: ${memberCode}`
+                    const user = DB.getUser(memberCode);
+                    
+                    const placemark = new window.ymaps.Placemark(location.coords, {
+                        balloonContent: `${user && user.firstName ? user.firstName : 'Товарищ'} (${memberCode})`
                     }, {
-                        preset: isCurrentUser ? 'islands#blueCircleIcon' : 'islands#greenCircleIcon',
+                        preset: 'islands#greenCircleIcon',
                         iconColor: userTeam.color
                     });
                     map.geoObjects.add(placemark);
                 }
             });
+            
+            // Показываем активное раскрытие если оно активно
+            if (revealActive) {
+                addAllPlayersToMap();
+            }
         }
-
+        
+        // Добавить всех игроков на карту (при активации раскрытия)
+        function addAllPlayersToMap() {
+            if (!map) return;
+            
+            const playerLocations = DB.getAllPlayerLocations();
+            const teams = DB.getAllTeams();
+            const users = DB.getAllUsers();
+            
+            Object.entries(playerLocations).forEach(([memberCode, location]) => {
+                if (Date.now() - location.timestamp < 5 * 60 * 1000) { // Данные не старше 5 минут
+                    // Находим команду игрока
+                    let teamColor = '#ff0000';
+                    let playerName = 'Игрок';
+                    
+                    const user = users[memberCode];
+                    if (user && user.firstName) {
+                        playerName = user.firstName;
+                    }
+                    
+                    const playerTeam = Object.values(teams).find(team => team.members.includes(memberCode));
+                    if (playerTeam) {
+                        teamColor = playerTeam.color;
+                    }
+                    
+                    const placemark = new window.ymaps.Placemark(location.coords, {
+                        balloonContent: `${playerName} (${memberCode})`
+                    }, {
+                        preset: 'islands#circleIcon',
+                        iconColor: teamColor
+                    });
+                    map.geoObjects.add(placemark);
+                }
+            });
+        }
+        
+        // Проверка кнопки "Показать игроков"
+        function checkRevealButton() {
+            // Находим команду пользователя
+            const teams = DB.getAllTeams();
+            const userTeam = Object.values(teams).find(team => team.members.includes(currentUserCode));
+            
+            // Показываем кнопку только для искателей
+            if (userTeam && userTeam.type === 'seekers') {
+                revealPlayersBtn.style.display = 'flex';
+                updateRevealTimer();
+            } else {
+                revealPlayersBtn.style.display = 'none';
+            }
+        }
+        
+        // Обновление таймера кнопки "Показать игроков"
+        function updateRevealTimer() {
+            const lastRevealTime = DB.getLastRevealTime();
+            const currentTime = Math.floor(Date.now() / 1000);
+            const timeSinceLastReveal = currentTime - lastRevealTime;
+            
+            if (timeSinceLastReveal < revealCooldown) {
+                // Кнопка на перезарядке
+                const timeLeft = revealCooldown - timeSinceLastReveal;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                revealTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                revealPlayersBtn.disabled = true;
+                
+                // Продолжаем обновлять таймер
+                setTimeout(updateRevealTimer, 1000);
+            } else {
+                // Кнопка готова
+                revealTimer.textContent = 'Готово';
+                revealPlayersBtn.disabled = false;
+            }
+        }
+        
+        // Активация раскрытия игроков
+        function activateReveal() {
+            if (!isGameStarted) {
+                alert(currentLanguage === 'ru' ? 'Игра еще не началась!' : 'Game not started yet!');
+                return;
+            }
+            
+            const currentTime = Math.floor(Date.now() / 1000);
+            DB.setLastRevealTime(currentTime);
+            
+            revealActive = true;
+            revealEndTime = currentTime + 60; // 60 секунд отображения
+            
+            // Обновляем карту
+            if (map) {
+                map.geoObjects.removeAll();
+                addZonesToMap();
+                addTeammatesToMap();
+                addAllPlayersToMap();
+            }
+            
+            // Отправляем уведомление всем игрокам
+            sendRevealNotification();
+            
+            // Отключаем кнопку
+            revealPlayersBtn.disabled = true;
+            revealPlayersBtn.innerHTML = '<i class="fas fa-eye"></i><span>Игроки видны (1:00)</span>';
+            
+            // Запускаем таймер окончания раскрытия
+            startRevealCountdown();
+            
+            // Обновляем таймер перезарядки
+            setTimeout(() => {
+                updateRevealTimer();
+                revealPlayersBtn.innerHTML = '<i class="fas fa-eye"></i><span>Показать игроков</span>';
+            }, 60000);
+        }
+        
+        // Отправка уведомления о раскрытии
+        function sendRevealNotification() {
+            const user = DB.getUser(currentUserCode);
+            const userName = user && user.firstName ? user.firstName : 'Искатель';
+            
+            // В реальном приложении здесь был бы запрос к серверу для отправки push-уведомлений
+            // В данном примере показываем локальное уведомление
+            if (tg && tg.showPopup) {
+                tg.showPopup({
+                    title: '🔍 ' + (currentLanguage === 'ru' ? 'Внимание!' : 'Attention!'),
+                    message: currentLanguage === 'ru' ? 
+                        `${userName} активировал раскрытие! Все игроки видны на карте в течение 1 минуты!` :
+                        `${userName} activated reveal! All players are visible on the map for 1 minute!`,
+                    buttons: [{ type: 'ok' }]
+                });
+            }
+            
+            // Также показываем уведомление в зоне
+            showZoneNotification(currentLanguage === 'ru' ? 
+                'Вас видят! Искатели активировали раскрытие игроков на 1 минуту!' :
+                'You are visible! Seekers activated player reveal for 1 minute!', 'red');
+        }
+        
+        // Таймер окончания раскрытия
+        function startRevealCountdown() {
+            const updateCountdown = () => {
+                const currentTime = Math.floor(Date.now() / 1000);
+                const timeLeft = revealEndTime - currentTime;
+                
+                if (timeLeft > 0) {
+                    const seconds = timeLeft % 60;
+                    revealPlayersBtn.innerHTML = `<i class="fas fa-eye"></i><span>Игроки видны (0:${seconds.toString().padStart(2, '0')})</span>`;
+                    setTimeout(updateCountdown, 1000);
+                } else {
+                    revealActive = false;
+                    // Обновляем карту
+                    if (map && currentPage === 'map-page') {
+                        map.geoObjects.removeAll();
+                        addZonesToMap();
+                        addTeammatesToMap();
+                    }
+                    revealPlayersBtn.innerHTML = '<i class="fas fa-eye"></i><span>Показать игроков</span>';
+                }
+            };
+            
+            updateCountdown();
+        }
+        
         // Инициализация карты для редактирования зон
         function initZoneEditMap() {
-            if (typeof ymaps !== 'undefined' && window.ymaps) {
-                ymaps.ready(() => {
+            if (typeof window.ymaps !== 'undefined') {
+                window.ymaps.ready(() => {
                     try {
-                        zoneMap = new ymaps.Map('zone-edit-map', {
+                        zoneMap = new window.ymaps.Map('zone-edit-map', {
                             center: GAME_CENTER,
                             zoom: 13,
                             controls: ['zoomControl']
                         }, {
                             suppressMapOpenBlock: true
                         });
-
+                        
                         // Устанавливаем темную тему
                         zoneMap.setType('yandex#dark');
-
+                        
                         // Добавляем зоны
                         updateZoneEditMap();
-
+                        
                     } catch (error) {
                         console.error('Ошибка создания карты для редактирования зон:', error);
                         // Если карта не загрузилась, показываем сообщение
@@ -3605,101 +3812,101 @@
                 `;
             }
         }
-
+        
         // Обновление карты редактирования зон
         function updateZoneEditMap() {
-            if (!zoneMap || !ymaps) return;
-
+            if (!zoneMap || !window.ymaps) return;
+            
             // Очищаем старые зоны
             zoneMap.geoObjects.removeAll();
-
+            
             // Создаем зеленую зону (внутренний круг)
-            const greenZone = new ymaps.Circle([GAME_CENTER, greenZoneRadiusValue * 1000], {
+            const greenZone = new window.ymaps.Circle([GAME_CENTER, greenZoneRadiusValue * 1000], {
                 hintContent: currentLanguage === 'ru' ? 'Зеленая зона' : 'Green zone'
             }, {
                 fillColor: '#4CAF5080',
                 strokeColor: '#4CAF50',
                 strokeWidth: 3
             });
-
+            
             // Создаем желтую зону (внешний круг)
-            const yellowZone = new ymaps.Circle([GAME_CENTER, yellowZoneRadiusValue * 1000], {
+            const yellowZone = new window.ymaps.Circle([GAME_CENTER, yellowZoneRadiusValue * 1000], {
                 hintContent: currentLanguage === 'ru' ? 'Желтая зона' : 'Yellow zone'
             }, {
                 fillColor: '#ff980080',
                 strokeColor: '#ff9800',
                 strokeWidth: 3
             });
-
+            
             // Добавляем зоны на карту
             zoneMap.geoObjects.add(yellowZone);
             zoneMap.geoObjects.add(greenZone);
-
+            
             // Добавляем метку центра
-            const centerPlacemark = new ymaps.Placemark(GAME_CENTER, {
+            const centerPlacemark = new window.ymaps.Placemark(GAME_CENTER, {
                 balloonContent: currentLanguage === 'ru' ? 'Центр игры: Елизарова 30' : 'Game center: Elizarova 30'
             }, {
                 preset: 'islands#redCircleIcon'
             });
             zoneMap.geoObjects.add(centerPlacemark);
-
+            
             // Автоматически подгоняем масштаб чтобы показать все зоны
             zoneMap.setBounds(yellowZone.geometry.getBounds());
-
+            
             // Обновляем информацию о радиусах
             updateZoneRadiusInfo();
         }
-
+        
         // Обновление информации о радиусах зон
         function updateZoneRadiusInfo() {
             greenZoneRadius.textContent = `${greenZoneRadiusValue.toFixed(1)} км`;
             yellowZoneRadius.textContent = `${yellowZoneRadiusValue.toFixed(1)} км`;
         }
-
+        
         // Уменьшение зоны
         function reduceZone() {
             greenZoneRadiusValue = Math.max(0.1, greenZoneRadiusValue * 0.8);
             yellowZoneRadiusValue = Math.max(0.2, yellowZoneRadiusValue * 0.8);
-
+            
             // Сохраняем в базу данных
             DB.saveZoneSettings(greenZoneRadiusValue, yellowZoneRadiusValue);
-
+            
             updateZoneEditMap();
-
+            
             // Если основная карта открыта, обновляем ее
             if (map && currentPage === 'map-page') {
                 addZonesToMap();
             }
         }
-
+        
         // Сброс зон к изначальному виду
         function resetZone() {
             greenZoneRadiusValue = 1.0;
             yellowZoneRadiusValue = 1.2;
-
+            
             // Сохраняем в базу данных
             DB.saveZoneSettings(greenZoneRadiusValue, yellowZoneRadiusValue);
-
+            
             updateZoneEditMap();
-
+            
             // Если основная карта открыта, обновляем ее
             if (map && currentPage === 'map-page') {
                 addZonesToMap();
             }
         }
-
+        
         // Функция настроек зон
         function openZoneSettings() {
             if (!isDeveloper) return;
-
+            
             // Инициализируем карту редактирования зон
             setTimeout(() => {
                 initZoneEditMap();
             }, 100);
-
+            
             zoneEditModal.style.display = 'flex';
         }
-
+        
         // Обновление предупреждения о геолокации
         function updateGeolocationWarning() {
             if (!geolocationEnabled) {
@@ -3714,11 +3921,11 @@
                 geolocationStatusText.style.color = '';
             }
         }
-
+        
         // Переключение свертывания правил
         function toggleRules() {
             rulesCollapsed = !rulesCollapsed;
-
+            
             if (rulesCollapsed) {
                 rulesContent.classList.add('collapsed');
                 rulesToggle.classList.add('collapsed');
@@ -3729,11 +3936,11 @@
                 rulesHeader.classList.remove('collapsed');
             }
         }
-
+        
         // Смена языка
         function changeLanguage(lang) {
             currentLanguage = lang;
-
+            
             // Обновляем активный язык
             languageOptions.forEach(option => {
                 if (option.dataset.lang === lang) {
@@ -3742,7 +3949,7 @@
                     option.classList.remove('active');
                 }
             });
-
+            
             // Обновляем все текстовые элементы
             Object.keys(textElements).forEach(key => {
                 const element = document.getElementById(key);
@@ -3754,58 +3961,105 @@
                     }
                 }
             });
-
+            
+            // Обновляем правила игры
+            updateRulesText();
+            
             // Обновляем кнопку входа
             updateSubmitButton();
-
+            
             // Обновляем статус геолокации
             updateGeolocationWarning();
-
+            
             // Обновляем таймер
             updateCountdown();
-
+            
             // Обновляем список команд
             updateTeamsList();
-
+            
             // Обновляем информацию о зонах
             updateZoneRadiusInfo();
-
+            
             console.log('Язык изменен на:', lang);
         }
-
+        
+        // Обновление текста правил
+        function updateRulesText() {
+            const rulesText = document.getElementById('rules-text');
+            if (currentLanguage === 'ru') {
+                rulesText.innerHTML = `
+                    <ol>
+                        <li>Не мешать нормальной игре</li>
+                        <li>Следовать правилам</li>
+                        <li>Никакого тимминга</li>
+                        <li>Нельзя заходить на запретные зоны.</li>
+                        <li>Нельзя рассылать приложение игры третьим лицам</li>
+                        <li>Запрещена рассылка информации о прятках.</li>
+                        <li>Запрещены драки</li>
+                        <li>Запрещена нечестная игра</li>
+                        <li>Запрещено уходить из игры без уведомления об этом организаторам.</li>
+                        <li>Незнание правил не освобождает вас от ответственности</li>
+                        <li>Запрещено провождение своих игр нашей тематики без согласия организаторов.</li>
+                        <li>Каждый участник игры должен находится в данном канале.</li>
+                        <li>Вы обязаны подчиняться организаторам</li>
+                        <li>Веселитесь!</li>
+                    </ol>
+                `;
+            } else {
+                rulesText.innerHTML = `
+                    <ol>
+                        <li>Don't interfere with normal gameplay</li>
+                        <li>Follow the rules</li>
+                        <li>No teaming</li>
+                        <li>Don't enter forbidden zones.</li>
+                        <li>Don't distribute the game app to third parties</li>
+                        <li>Dissemination of information about hide-and-seek is prohibited.</li>
+                        <li>Fights are prohibited</li>
+                        <li>Cheating is prohibited</li>
+                        <li>Leaving the game without notifying the organizers is prohibited.</li>
+                        <li>Ignorance of the rules does not exempt you from responsibility</li>
+                        <li>Conducting your own games of our theme without the consent of the organizers is prohibited.</li>
+                        <li>Each game participant must be in this channel.</li>
+                        <li>You must obey the organizers</li>
+                        <li>Have fun!</li>
+                    </ol>
+                `;
+            }
+        }
+        
         // Обновление списка команд
         function updateTeamsList() {
             teamsList.innerHTML = '';
-
+            
             const teams = DB.getAllTeams();
-
+            
             if (Object.keys(teams).length === 0) {
                 teamsList.innerHTML = `
                     <div style="text-align: center; padding: 30px; color: var(--text-secondary);">
                         <i class="fas fa-users" style="font-size: 40px; margin-bottom: 10px; opacity: 0.5;"></i>
-                        <div>Команд пока нет</div>
-                        ${isDeveloper ? '<div style="font-size: 12px; margin-top: 10px;">Создайте первую команду</div>' : ''}
+                        <div>${currentLanguage === 'ru' ? 'Команд пока нет' : 'No teams yet'}</div>
+                        ${isDeveloper ? '<div style="font-size: 12px; margin-top: 10px;">' + (currentLanguage === 'ru' ? 'Создайте первую команду' : 'Create first team') + '</div>' : ''}
                     </div>
                 `;
                 return;
             }
-
+            
             Object.values(teams).forEach(team => {
                 const teamElement = document.createElement('div');
                 teamElement.className = 'team-item';
                 teamElement.dataset.teamId = team.id;
-
+                
                 const isMember = team.members.includes(currentUserCode);
                 const isCaptain = team.captain === currentUserCode;
-
+                
                 teamElement.innerHTML = `
                     <div class="team-header">
                         <div class="team-name">
                             <div class="team-color" style="background: ${team.color}"></div>
                             <span>${team.name}</span>
-                            ${isMember ? '<span style="color: var(--accent-yellow); font-size: 12px;">(Ваша команда)</span>' : ''}
+                            ${isMember ? '<span style="color: var(--accent-yellow); font-size: 12px;">' + (currentLanguage === 'ru' ? '(Ваша команда)' : '(Your team)') + '</span>' : ''}
                             <span style="font-size: 12px; color: ${team.type === 'hiders' ? '#4CAF50' : '#2196F3'}; margin-left: 5px;">
-                                ${team.type === 'hiders' ? 'Прячущиеся' : 'Искатели'}
+                                ${team.type === 'hiders' ? (currentLanguage === 'ru' ? 'Прячущиеся' : 'Hiders') : (currentLanguage === 'ru' ? 'Искатели' : 'Seekers')}
                             </span>
                         </div>
                         <div class="team-actions">
@@ -3819,7 +4073,7 @@
                             ` : ''}
                         </div>
                     </div>
-                    <div class="team-description">${team.description || 'Нет описания'}</div>
+                    <div class="team-description">${team.description || (currentLanguage === 'ru' ? 'Нет описания' : 'No description')}</div>
                     <div class="team-members">
                         ${team.members.map(member => `
                             <div class="team-member ${member === currentUserCode ? 'me' : ''}">
@@ -3829,9 +4083,9 @@
                         `).join('')}
                     </div>
                 `;
-
+                
                 teamsList.appendChild(teamElement);
-
+                
                 // Добавляем обработчик клика на команду
                 teamElement.addEventListener('click', (e) => {
                     // Если клик был не по кнопке редактирования или удаления
@@ -3839,7 +4093,7 @@
                         openTeamModal(team);
                     }
                 });
-
+                
                 // Добавляем обработчик для кнопки редактирования (только для разработчика)
                 if (isDeveloper) {
                     const editBtn = teamElement.querySelector('.edit-team-btn');
@@ -3847,7 +4101,7 @@
                         e.stopPropagation(); // Предотвращаем открытие модального окна команды
                         openTeamEditor(team);
                     });
-
+                    
                     const deleteBtn = teamElement.querySelector('.delete-team-btn');
                     deleteBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -3858,16 +4112,18 @@
                 }
             });
         }
-
+        
         // Открыть модальное окно команды
         function openTeamModal(team) {
             document.getElementById('team-modal-name').textContent = team.name;
-            document.getElementById('team-modal-description').textContent = team.description || 'Нет описания';
-            document.getElementById('team-modal-type').textContent = team.type === 'hiders' ? 'Прячущиеся' : 'Искатели';
-
+            document.getElementById('team-modal-description').textContent = team.description || (currentLanguage === 'ru' ? 'Нет описания' : 'No description');
+            document.getElementById('team-modal-type').textContent = team.type === 'hiders' ? 
+                (currentLanguage === 'ru' ? 'Прячущиеся' : 'Hiders') : 
+                (currentLanguage === 'ru' ? 'Искатели' : 'Seekers');
+            
             const membersList = document.getElementById('team-modal-members');
             membersList.innerHTML = '';
-
+            
             team.members.forEach(member => {
                 const memberElement = document.createElement('div');
                 memberElement.className = 'member-item';
@@ -3875,23 +4131,23 @@
                     <div class="member-info">
                         <i class="fas fa-user"></i>
                         <div>
-                            <div class="member-name">${member === currentUserCode ? 'Вы' : 'Участник'}</div>
-                            <div class="member-code">Код: ${member}</div>
+                            <div class="member-name">${member === currentUserCode ? (currentLanguage === 'ru' ? 'Вы' : 'You') : (currentLanguage === 'ru' ? 'Участник' : 'Member')}</div>
+                            <div class="member-code">${currentLanguage === 'ru' ? 'Код:' : 'Code:'} ${member}</div>
                         </div>
                     </div>
-                    ${member === team.captain ? '<span style="color: var(--accent-yellow);">Капитан</span>' : ''}
+                    ${member === team.captain ? '<span style="color: var(--accent-yellow);">' + (currentLanguage === 'ru' ? 'Капитан' : 'Captain') + '</span>' : ''}
                 `;
                 membersList.appendChild(memberElement);
             });
-
+            
             teamModal.style.display = 'flex';
         }
-
+        
         // Открыть редактор команд
         function openTeamEditor(team = null) {
             editingTeam = team;
             editingMembers = team ? [...team.members] : []; // Теперь можно создавать команду без участников
-
+            
             if (team) {
                 // Редактирование существующей команды
                 document.getElementById('team-editor-title').textContent = currentLanguage === 'ru' ? 'Редактирование команды' : 'Edit Team';
@@ -3899,7 +4155,7 @@
                 document.getElementById('team-editor-description').value = team.description || '';
                 colorPicker.value = team.color;
                 colorPreview.style.backgroundColor = team.color;
-
+                
                 // Выбираем тип команды
                 teamTypeOptions.forEach(option => {
                     if (option.dataset.type === team.type) {
@@ -3908,7 +4164,7 @@
                         option.classList.remove('selected');
                     }
                 });
-
+                
                 // Показываем участников
                 updateEditorMembersList();
             } else {
@@ -3918,7 +4174,7 @@
                 document.getElementById('team-editor-description').value = '';
                 colorPicker.value = '#4CAF50';
                 colorPreview.style.backgroundColor = '#4CAF50';
-
+                
                 // Сбрасываем тип команды к первому
                 teamTypeOptions.forEach((option, index) => {
                     if (index === 0) {
@@ -3927,29 +4183,29 @@
                         option.classList.remove('selected');
                     }
                 });
-
+                
                 // Очищаем список участников
                 updateEditorMembersList();
             }
-
+            
             teamEditorModal.style.display = 'flex';
         }
-
+        
         // Обновление списка участников в редакторе
         function updateEditorMembersList() {
             const membersList = document.getElementById('team-editor-members');
             membersList.innerHTML = '';
-
+            
             if (editingMembers.length === 0) {
                 membersList.innerHTML = `
                     <div style="text-align: center; padding: 15px; color: var(--text-secondary); font-size: 14px;">
                         <i class="fas fa-user-plus" style="font-size: 20px; margin-bottom: 5px; display: block;"></i>
-                        Участников пока нет
+                        ${currentLanguage === 'ru' ? 'Участников пока нет' : 'No members yet'}
                     </div>
                 `;
                 return;
             }
-
+            
             editingMembers.forEach(member => {
                 const memberElement = document.createElement('div');
                 memberElement.className = 'member-item';
@@ -3957,8 +4213,8 @@
                     <div class="member-info">
                         <i class="fas fa-user"></i>
                         <div>
-                            <div class="member-name">${member === currentUserCode ? 'Вы' : 'Участник'}</div>
-                            <div class="member-code">Код: ${member}</div>
+                            <div class="member-name">${member === currentUserCode ? (currentLanguage === 'ru' ? 'Вы' : 'You') : (currentLanguage === 'ru' ? 'Участник' : 'Member')}</div>
+                            <div class="member-code">${currentLanguage === 'ru' ? 'Код:' : 'Code:'} ${member}</div>
                         </div>
                     </div>
                     <div class="member-actions">
@@ -3969,7 +4225,7 @@
                 `;
                 membersList.appendChild(memberElement);
             });
-
+            
             // Добавляем обработчики для кнопок удаления
             document.querySelectorAll('.delete-editor-member').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -3978,19 +4234,19 @@
                 });
             });
         }
-
+        
         // Удалить участника из редактора
         function removeMemberFromEditor(memberCode) {
             editingMembers = editingMembers.filter(m => m !== memberCode);
             updateEditorMembersList();
         }
-
+        
         // Открыть модальное окно добавления участников
         function openAddMembersModal() {
             membersInput.value = '';
             membersModal.style.display = 'flex';
         }
-
+        
         // Добавить участников из модального окна
         function addMembersFromModal() {
             const input = membersInput.value.trim();
@@ -3998,12 +4254,12 @@
                 membersModal.style.display = 'none';
                 return;
             }
-
+            
             // Разделяем коды по запятой и очищаем от пробелов
             const codes = input.split(',')
                 .map(code => code.trim())
                 .filter(code => /^\d{6}$/.test(code));
-
+            
             // Проверяем максимальное количество участников
             const totalMembers = editingMembers.length + codes.length;
             if (totalMembers > 7) {
@@ -4012,36 +4268,36 @@
                     `Maximum 7 members per team. You already have ${editingMembers.length}, trying to add ${codes.length}`);
                 return;
             }
-
+            
             // Добавляем новые коды, исключая дубликаты
             codes.forEach(code => {
                 if (!editingMembers.includes(code)) {
                     editingMembers.push(code);
                 }
             });
-
+            
             // Закрываем модальное окно и обновляем список
             membersModal.style.display = 'none';
             updateEditorMembersList();
         }
-
+        
         // Сохранить команду
         function saveTeam() {
             const name = document.getElementById('team-editor-name').value.trim();
             const description = document.getElementById('team-editor-description').value.trim();
             const color = colorPicker.value;
             const type = document.querySelector('.team-type-option.selected').dataset.type;
-
+            
             if (!name) {
                 alert(currentLanguage === 'ru' ? 'Введите название команды' : 'Enter team name');
                 return;
             }
-
+            
             // Если команда без участников, создаем пустой массив
             if (editingMembers.length === 0) {
                 editingMembers = [];
             }
-
+            
             const teamData = {
                 name: name,
                 description: description,
@@ -4051,53 +4307,50 @@
                 captain: editingMembers.length > 0 ? editingMembers[0] : null,
                 createdAt: editingTeam ? editingTeam.createdAt : new Date().toISOString()
             };
-
+            
             // Сохраняем команду в базе данных
             const teamId = DB.saveTeam(teamData);
-
+            
             // Закрываем редактор и обновляем список
             teamEditorModal.style.display = 'none';
             updateTeamsList();
-
-            // Если мы на странице карты, обновляем метки
-            if (currentPage === 'map-page' && map) {
-                // Очищаем старые метки и добавляем новые
-                map.geoObjects.removeAll();
-                addZonesToMap();
-                if (isDeveloper) {
-                    addAllPlayersMarkers();
+            
+            // Если мы на странице карты, обновляем метки и кнопку раскрытия
+            if (currentPage === 'map-page') {
+                if (map) {
+                    map.geoObjects.removeAll();
+                    addZonesToMap();
+                    addTeammatesToMap();
                 }
-                addTeamPlayersMarkers();
+                checkRevealButton();
             }
-
+            
             alert(currentLanguage === 'ru' ? 'Команда сохранена!' : 'Team saved!');
         }
-
+        
         // Удалить команду
         function deleteTeam(teamId) {
             DB.deleteTeam(teamId);
             updateTeamsList();
-
+            
             // Если мы на странице карты, обновляем метки
             if (currentPage === 'map-page' && map) {
                 map.geoObjects.removeAll();
                 addZonesToMap();
-                if (isDeveloper) {
-                    addAllPlayersMarkers();
-                }
-                addTeamPlayersMarkers();
+                addTeammatesToMap();
+                checkRevealButton();
             }
-
+            
             alert(currentLanguage === 'ru' ? 'Команда удалена!' : 'Team deleted!');
         }
-
+        
         // Подтверждение удаления
         function confirmDeleteItem(type, id, name) {
             deleteTarget = { type, id, name };
-
+            
             let title = '';
             let text = '';
-
+            
             if (type === 'team') {
                 title = currentLanguage === 'ru' ? 'Удаление команды' : 'Delete Team';
                 text = currentLanguage === 'ru' ? 
@@ -4114,12 +4367,12 @@
                     `Вы точно хотите удалить код "${name}"?` :
                     `Are you sure you want to delete code "${name}"?`;
             }
-
+            
             document.getElementById('delete-confirm-title').textContent = title;
             document.getElementById('delete-confirm-text').innerHTML = text;
             deleteConfirmModal.style.display = 'flex';
         }
-
+        
         // Выполнение удаления после подтверждения
         function executeDelete() {
             if (deleteTarget.type === 'team') {
@@ -4129,17 +4382,17 @@
                 updateGeneratedCodes();
                 alert(currentLanguage === 'ru' ? `Код ${deleteTarget.name} удален` : `Code ${deleteTarget.name} deleted`);
             }
-
+            
             deleteConfirmModal.style.display = 'none';
         }
-
+        
         // Открыть информацию о зоне
         function openZoneInfo(zoneType) {
             let title = '';
             let icon = '';
             let description = '';
             let zoneClass = '';
-
+            
             if (zoneType === 'green') {
                 title = currentLanguage === 'ru' ? 'Зеленая зона' : 'Green Zone';
                 icon = 'fas fa-check-circle';
@@ -4162,9 +4415,9 @@
                     'Get out of there, or you will be disqualified!';
                 zoneClass = 'zone-red';
             }
-
+            
             document.getElementById('zone-info-title').textContent = title;
-
+            
             const zoneInfoContent = document.getElementById('zone-info-content');
             zoneInfoContent.className = `zone-info ${zoneClass}`;
             zoneInfoContent.innerHTML = `
@@ -4176,26 +4429,26 @@
                     <div class="zone-info-desc">${description}</div>
                 </div>
             `;
-
+            
             zoneInfoModal.style.display = 'flex';
         }
-
+        
         // Обновление сгенерированных кодов
         function updateGeneratedCodes() {
             codesList.innerHTML = '';
-
+            
             const codes = DB.getGeneratedCodes();
-
+            
             if (codes.length === 0) {
                 codesList.innerHTML = `
                     <div style="text-align: center; padding: 30px; color: var(--text-secondary);">
                         <i class="fas fa-key" style="font-size: 40px; margin-bottom: 10px; opacity: 0.5;"></i>
-                        <div>Сгенерированных кодов пока нет</div>
+                        <div>${currentLanguage === 'ru' ? 'Сгенерированных кодов пока нет' : 'No generated codes yet'}</div>
                     </div>
                 `;
                 return;
             }
-
+            
             codes.forEach(code => {
                 const codeElement = document.createElement('div');
                 codeElement.className = 'code-item';
@@ -4212,7 +4465,7 @@
                 `;
                 codesList.appendChild(codeElement);
             });
-
+            
             // Добавляем обработчики для кнопок
             document.querySelectorAll('.copy').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -4222,7 +4475,7 @@
                     });
                 });
             });
-
+            
             document.querySelectorAll('.delete-code').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const code = e.currentTarget.dataset.code;
@@ -4230,51 +4483,51 @@
                 });
             });
         }
-
+        
         // Генерация нового кода
         function generateCode() {
             let newCode;
             do {
                 newCode = Math.floor(100000 + Math.random() * 900000).toString();
             } while (DB.getGeneratedCodes().includes(newCode));
-
+            
             DB.addGeneratedCode(newCode);
             updateGeneratedCodes();
-
+            
             alert(currentLanguage === 'ru' ? `Сгенерирован новый код: ${newCode}` : `New code generated: ${newCode}`);
         }
-
+        
         // Обработчики событий для инпутов
         codeInputs.forEach((input, index) => {
             // При вводе
             input.addEventListener('input', (e) => {
                 const value = e.target.value;
-
+                
                 // Разрешаем только цифры
                 if (!/^\d?$/.test(value)) {
                     e.target.value = '';
                     return;
                 }
-
+                
                 // Обновляем enteredCode
                 enteredCode = enteredCode.split('');
                 enteredCode[index] = value;
                 enteredCode = enteredCode.join('');
-
+                
                 // Автопереход к следующему инпуту
                 if (value && index < 5) {
                     setTimeout(() => codeInputs[index + 1].focus(), 10);
                 }
-
+                
                 // Обновляем состояние
                 updateSubmitButton();
-
+                
                 // Сбрасываем подсветку при изменении (только если был зеленый)
                 if (allInputsGreen) {
                     codeInputs.forEach(input => input.classList.remove('correct', 'incorrect'));
                     allInputsGreen = false;
                 }
-
+                
                 // Если код полный - проверяем и подсвечиваем
                 if (enteredCode.length === 6) {
                     checkAndHighlightCode();
@@ -4285,7 +4538,7 @@
                     statusMessage.className = 'status-message';
                 }
             });
-
+            
             // При нажатии клавиш
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace') {
@@ -4293,18 +4546,18 @@
                         // Переход к предыдущему инпуту
                         codeInputs[index - 1].focus();
                         codeInputs[index - 1].value = '';
-
+                        
                         // Обновляем enteredCode
                         enteredCode = enteredCode.split('');
                         enteredCode[index - 1] = '';
                         enteredCode = enteredCode.join('');
-
+                        
                         // Сбрасываем подсветку
                         if (allInputsGreen) {
                             codeInputs.forEach(input => input.classList.remove('correct', 'incorrect'));
                             allInputsGreen = false;
                         }
-
+                        
                         updateSubmitButton();
                     }
                 } else if (e.key === 'ArrowLeft' && index > 0) {
@@ -4313,12 +4566,12 @@
                     codeInputs[index + 1].focus();
                 }
             });
-
+            
             // При вставке
             input.addEventListener('paste', (e) => {
                 e.preventDefault();
                 const pastedData = e.clipboardData.getData('text').trim();
-
+                
                 if (/^\d{6}$/.test(pastedData)) {
                     // Заполняем все инпуты
                     pastedData.split('').forEach((char, i) => {
@@ -4326,34 +4579,34 @@
                             codeInputs[i].value = char;
                         }
                     });
-
+                    
                     enteredCode = pastedData;
                     updateSubmitButton();
-
+                    
                     // Сбрасываем подсветку
                     if (allInputsGreen) {
                         codeInputs.forEach(input => input.classList.remove('correct', 'incorrect'));
                         allInputsGreen = false;
                     }
-
+                    
                     // Проверяем полный код
                     if (enteredCode.length === 6) {
                         checkAndHighlightCode();
                     }
-
+                    
                     // Фокус на последний инпут
                     codeInputs[5].focus();
                 }
             });
         });
-
+        
         // Обработчик кнопки входа
         submitBtn.addEventListener('click', () => {
             if (enteredCode.length === 6 && !allInputsGreen) {
                 checkAndHighlightCode();
             }
         });
-
+        
         // Обработчики навигации
         navItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -4362,16 +4615,16 @@
                 }
             });
         });
-
+        
         // Обработчик переключения геолокации
         geolocationToggle.addEventListener('change', function() {
             geolocationEnabled = this.checked;
             updateGeolocationWarning();
-
+            
             if (currentPage === 'map-page') {
                 updateMapDisplay();
             }
-
+            
             // Останавливаем или запускаем отслеживание геолокации
             if (geolocationEnabled && isLoggedIn) {
                 startGeolocationTracking();
@@ -4379,88 +4632,88 @@
                 navigator.geolocation.clearWatch(locationWatchId);
                 locationWatchId = null;
             }
-
+            
             console.log('Геолокация:', geolocationEnabled ? 'включена' : 'выключена');
         });
-
+        
         // Обработчик кнопки выхода
         logoutBtn.addEventListener('click', logout);
-
+        
         // Обработчик кнопки удаления
         deleteBtn.addEventListener('click', deleteAccount);
-
+        
         // Обработчики модальных окон
         document.getElementById('logout-cancel').addEventListener('click', () => {
             logoutModal.style.display = 'none';
         });
-
+        
         document.getElementById('logout-confirm').addEventListener('click', confirmLogout);
-
+        
         document.getElementById('delete-cancel').addEventListener('click', () => {
             deleteModal.style.display = 'none';
         });
-
+        
         document.getElementById('delete-confirm').addEventListener('click', confirmDelete);
-
+        
         document.getElementById('team-modal-close').addEventListener('click', () => {
             teamModal.style.display = 'none';
         });
-
+        
         document.getElementById('team-editor-cancel').addEventListener('click', () => {
             teamEditorModal.style.display = 'none';
         });
-
+        
         document.getElementById('team-editor-save').addEventListener('click', saveTeam);
-
+        
         document.getElementById('members-modal-cancel').addEventListener('click', () => {
             membersModal.style.display = 'none';
         });
-
+        
         document.getElementById('members-modal-save').addEventListener('click', addMembersFromModal);
-
+        
         document.getElementById('delete-confirm-cancel').addEventListener('click', () => {
             deleteConfirmModal.style.display = 'none';
         });
-
+        
         document.getElementById('delete-confirm-ok').addEventListener('click', executeDelete);
-
+        
         document.getElementById('zone-info-close').addEventListener('click', () => {
             zoneInfoModal.style.display = 'none';
         });
-
+        
         document.getElementById('zone-edit-back').addEventListener('click', () => {
             zoneEditModal.style.display = 'none';
         });
-
+        
         document.getElementById('admin-back-btn').addEventListener('click', () => {
             adminModal.style.display = 'none';
         });
-
+        
         // Обработчик переключения правил
         rulesHeader.addEventListener('click', toggleRules);
-
+        
         // Обработчики выбора языка
         languageOptions.forEach(option => {
             option.addEventListener('click', () => {
                 changeLanguage(option.dataset.lang);
             });
         });
-
+        
         // Обработчик кнопки настроек зон
         zoneSettingsBtn.addEventListener('click', openZoneSettings);
-
+        
         // Обработчик кнопки редактирования команд
         teamsEditBtn.addEventListener('click', () => {
             if (isDeveloper) {
                 openTeamEditor(); // Создание новой команды
             }
         });
-
+        
         // Обработчик выбора цвета
         colorPicker.addEventListener('input', () => {
             colorPreview.style.backgroundColor = colorPicker.value;
         });
-
+        
         // Обработчик выбора типа команды
         teamTypeOptions.forEach(option => {
             option.addEventListener('click', () => {
@@ -4470,22 +4723,22 @@
                 option.classList.add('selected');
             });
         });
-
+        
         // Обработчик добавления участников
         addMembersBtn.addEventListener('click', openAddMembersModal);
-
+        
         // Обработчики кнопок редактирования зон
         zoneReduceBtn.addEventListener('click', reduceZone);
         zoneResetBtn.addEventListener('click', resetZone);
-
+        
         // Обработчик кнопки админ панели
         adminBtn.addEventListener('click', () => {
             adminModal.style.display = 'flex';
         });
-
+        
         // Обработчик генерации кода
         generateCodeBtn.addEventListener('click', generateCode);
-
+        
         // Обработчики кликов по зонам
         document.querySelectorAll('.zone-item').forEach(zoneItem => {
             zoneItem.addEventListener('click', () => {
@@ -4493,12 +4746,15 @@
                 openZoneInfo(zoneType);
             });
         });
-
+        
         // Обработчик иконки телеграм
         telegramIcon.addEventListener('click', () => {
             window.open('https://t.me/megahideandseek', '_blank');
         });
-
+        
+        // Обработчик кнопки "Показать игроков"
+        revealPlayersBtn.addEventListener('click', activateReveal);
+        
         // Закрытие модальных окон по клику на оверлей
         [logoutModal, deleteModal, teamModal, teamEditorModal, membersModal, deleteConfirmModal, zoneInfoModal, zoneEditModal, adminModal].forEach(modal => {
             modal.addEventListener('click', (e) => {
@@ -4507,29 +4763,28 @@
                 }
             });
         });
-
+        
         // Обработчики других переключателей
         document.getElementById('notifications-toggle').addEventListener('change', function() {
             console.log('Уведомления:', this.checked ? 'включены' : 'выключены');
         });
-
+        
         document.getElementById('sounds-toggle').addEventListener('change', function() {
             console.log('Звуки:', this.checked ? 'включены' : 'выключены');
         });
-
+        
         // Инициализация
-        createParticles();
         codeInputs[0].focus();
         updateSubmitButton();
         updateCountdown();
         colorPreview.style.backgroundColor = colorPicker.value;
-
+        
         // Загружаем правила игры
-        document.getElementById('rules-text').innerHTML = document.getElementById('rules-text').innerHTML;
-
+        updateRulesText();
+        
         // Запуск таймера
         setInterval(updateCountdown, 1000);
-
+        
         // Получаем данные пользователя Telegram
         if (tg.initDataUnsafe?.user) {
             const user = tg.initDataUnsafe.user;
